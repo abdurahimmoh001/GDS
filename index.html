@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Golden Data Stream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Poppins', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.1",
+    "recharts": "https://aistudiocdn.com/recharts@^2.12.7",
+    "recharts/": "https://aistudiocdn.com/recharts@^2.12.7/",
+    "jspdf": "https://aistudiocdn.com/jspdf@^2.5.1",
+    "html2canvas": "https://aistudiocdn.com/html2canvas@^1.4.1"
+  }
+}
+</script>
+<style>
+  @keyframes file-scan-page {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+  .animate-file-scan-page-1 { animation: file-scan-page 1.5s ease-in-out infinite; }
+  .animate-file-scan-page-2 { animation: file-scan-page 1.5s ease-in-out infinite 0.3s; }
+  .animate-file-scan-page-3 { animation: file-scan-page 1.5s ease-in-out infinite 0.6s; }
+
+  @keyframes web-scan-line {
+    0% { transform: translateY(-8px); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateY(8px); opacity: 0; }
+  }
+  .animate-web-scan-line {
+    transform-origin: center;
+    animation: web-scan-line 2s ease-in-out infinite;
+  }
+  
+  @keyframes chart-gen-bar {
+    0% { transform: scaleY(0.1); }
+    50% { transform: scaleY(1); }
+    100% { transform: scaleY(0.1); }
+  }
+  .animate-chart-gen-bar-1 { transform-origin: bottom; animation: chart-gen-bar 1.2s ease-in-out infinite; }
+  .animate-chart-gen-bar-2 { transform-origin: bottom; animation: chart-gen-bar 1.2s ease-in-out infinite 0.2s; }
+  .animate-chart-gen-bar-3 { transform-origin: bottom; animation: chart-gen-bar 1.2s ease-in-out infinite 0.4s; }
+
+  @keyframes report-compile-line {
+    from { width: 0%; }
+    to { width: 100%; }
+  }
+  .animate-report-compile-line-1 { animation: report-compile-line 1.8s ease-out infinite; }
+  .animate-report-compile-line-2 { animation: report-compile-line 1.8s ease-out infinite 0.3s; }
+  .animate-report-compile-line-3 { animation: report-compile-line 1.8s ease-out infinite 0.6s; }
+  
+  @keyframes background-pan {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .animated-background {
+    background-image: radial-gradient(circle at 20% 20%, hsla(217, 91%, 60%, 0.1), transparent 40%),
+                      radial-gradient(circle at 80% 70%, hsla(190, 81%, 55%, 0.1), transparent 40%);
+    background-size: 200% 200%;
+    animation: background-pan 15s ease-in-out infinite;
+  }
+  .dark .animated-background {
+    background-image: radial-gradient(circle at 20% 20%, hsla(217, 91%, 60%, 0.15), transparent 40%),
+                      radial-gradient(circle at 80% 70%, hsla(190, 81%, 55%, 0.15), transparent 40%);
+  }
+
+  .chat-messages::-webkit-scrollbar {
+    width: 6px;
+  }
+  .chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .chat-messages::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1; /* slate-300 */
+    border-radius: 10px;
+  }
+  .dark .chat-messages::-webkit-scrollbar-thumb {
+    background-color: #475569; /* slate-600 */
+  }
+
+  @keyframes slide-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  .animate-slide-in-up {
+    animation: slide-in-up 0.3s ease-out forwards;
+  }
+</style>
+</head>
+  <body class="bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
