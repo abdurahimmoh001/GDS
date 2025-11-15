@@ -30,6 +30,7 @@ import LoadingScreen from './components/LoadingScreen';
 import AuthScreen from './components/AuthScreen';
 import { Chatbot } from './components/Chatbot';
 import { ChatIcon } from './components/icons/ChatIcon';
+import { PlusIcon } from './components/icons/PlusIcon';
 
 
 const MAX_HISTORY_ITEMS = 15;
@@ -46,7 +47,7 @@ const App: React.FC = () => {
   const [uploadedFiles, setUploadedFiles] = useState < UploadedFile[] > ([]);
   const [includePerspectives, setIncludePerspectives] = useState < boolean > (true);
   
-  const [view, setView] = useState < 'history' | 'form' | 'report' | 'error' | 'loading' > ('form');
+  const [view, setView] = useState < 'form' | 'report' | 'error' | 'loading' > ('form');
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [activeReport, setActiveReport] = useState<HistoryItem | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -77,7 +78,12 @@ const App: React.FC = () => {
           const savedHistory = localStorage.getItem(GDS_HISTORY_STORAGE_KEY);
           const parsedHistory = savedHistory ? JSON.parse(savedHistory) : [];
           setHistory(parsedHistory);
-          setView(parsedHistory.length > 0 ? 'history' : 'form');
+          if (parsedHistory.length > 0) {
+              setActiveReport(parsedHistory[0]);
+              setView('report');
+          } else {
+              setView('form');
+          }
         } catch (error) {
           console.error("Failed to parse history from local storage:", error);
           localStorage.removeItem(GDS_HISTORY_STORAGE_KEY);
@@ -134,13 +140,8 @@ const App: React.FC = () => {
 
   const handleStartNew = () => {
     setActiveReport(null);
-    setView('form');
-  }
-
-  const handleReturnHome = () => {
-    setActiveReport(null);
     setError(null);
-    setView(history.length > 0 ? 'history' : 'form');
+    setView('form');
   }
 
   const handleAuthAction = () => {
@@ -156,12 +157,8 @@ const App: React.FC = () => {
     setIsChatbotOpen(false);
   };
   
-  const renderMainContent = () => {
-    if (authState !== 'authenticated') {
-        return <AuthScreen onSignIn={handleAuthAction} onSignUp={handleAuthAction} />;
-    }
-
-    switch (view) {
+  const renderRightPanel = () => {
+     switch (view) {
       case 'loading':
         return <LoadingScreen />;
       case 'error':
@@ -170,10 +167,11 @@ const App: React.FC = () => {
             <p className="text-lg font-bold text-red-700 dark:text-red-300">Report Generation Failed</p>
             <p className="mt-2 text-red-600 dark:text-red-400">{error}</p>
              <button
-              onClick={handleReturnHome}
+              onClick={handleStartNew}
               className="mt-6 flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-blue-600/20 dark:text-blue-300 dark:hover:bg-blue-600/30 dark:focus:ring-offset-red-900/20 transition-colors"
             >
-              Return Home
+              <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
+              New Research
             </button>
           </div>
         );
@@ -182,39 +180,51 @@ const App: React.FC = () => {
           return (
              <ReportPanel
               report={activeReport.report}
-              onReturnHome={handleReturnHome}
+              onStartNew={handleStartNew}
               theme={theme}
               startupName={activeReport.startupName}
             />
           );
         }
         return null; // Should not happen
-      case 'history':
-        return (
-            <HistoryPanel 
-              history={history}
-              onSelectReport={handleSelectReport}
-              onStartNew={handleStartNew}
-            />
-        );
       case 'form':
         return (
-          <div className="max-w-3xl mx-auto">
-             <InputPanel
-              initialData={researchData}
-              setResearchData={setResearchData}
-              uploadedFiles={uploadedFiles}
-              setUploadedFiles={setUploadedFiles}
-              onGenerate={handleGenerateReport}
-              isLoading={isSubmitting}
-              includePerspectives={includePerspectives}
-              setIncludePerspectives={setIncludePerspectives}
-            />
-          </div>
+          <InputPanel
+            initialData={researchData}
+            setResearchData={setResearchData}
+            uploadedFiles={uploadedFiles}
+            setUploadedFiles={setUploadedFiles}
+            onGenerate={handleGenerateReport}
+            isLoading={isSubmitting}
+            includePerspectives={includePerspectives}
+            setIncludePerspectives={setIncludePerspectives}
+          />
         );
       default:
         return null;
     }
+  }
+
+  const renderMainContent = () => {
+    if (authState !== 'authenticated') {
+        return <AuthScreen onSignIn={handleAuthAction} onSignUp={handleAuthAction} />;
+    }
+
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+        <aside className="md:col-span-4 lg:col-span-3">
+          <HistoryPanel 
+            history={history}
+            onSelectReport={handleSelectReport}
+            onStartNew={handleStartNew}
+            activeReportId={activeReport?.id}
+          />
+        </aside>
+        <div className="md:col-span-8 lg:col-span-9">
+          {renderRightPanel()}
+        </div>
+      </div>
+    );
   };
 
 

@@ -10,9 +10,7 @@ import {
 import {
   DocumentIcon
 } from './icons/DocumentIcon';
-import {
-  HomeIcon
-} from './icons/HomeIcon';
+import { PlusIcon } from './icons/PlusIcon';
 import { DownloadIcon } from './icons/DownloadIcon';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { DataVisualizationHub } from './DataVisualizationHub';
@@ -20,7 +18,7 @@ import { DataVisualizationHub } from './DataVisualizationHub';
 
 interface ReportPanelProps {
   report: ResearchReport | null;
-  onReturnHome: () => void;
+  onStartNew: () => void;
   theme: 'light' | 'dark';
   startupName: string;
 }
@@ -43,7 +41,7 @@ const ReportSection: React.FC < {
 
 const ReportPanel: React.FC < ReportPanelProps > = ({
   report,
-  onReturnHome,
+  onStartNew,
   theme,
   startupName
 }) => {
@@ -90,8 +88,8 @@ const ReportPanel: React.FC < ReportPanelProps > = ({
         </div>
         <h3 className="mt-4 text-xl font-bold text-slate-900 dark:text-slate-200">Something went wrong</h3>
         <p className="mt-1 text-slate-500 dark:text-slate-400">Could not display the report. Please try again from the history.</p>
-        <button onClick={onReturnHome} className="mt-4 flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-           Return Home
+        <button onClick={onStartNew} className="mt-4 flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+           Start New Research
         </button>
       </div>
     );
@@ -103,11 +101,11 @@ const ReportPanel: React.FC < ReportPanelProps > = ({
              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Research Report</h2>
              <div className="flex items-center space-x-2">
                 <button
-                  onClick={onReturnHome}
+                  onClick={onStartNew}
                   className="flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-blue-600/20 dark:text-blue-300 dark:hover:bg-blue-600/30 dark:focus:ring-offset-slate-800 transition-colors"
                 >
-                  <HomeIcon className="-ml-1 mr-2 h-5 w-5" />
-                  Return Home
+                  <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
+                  New Research
                 </button>
                  <button
                     onClick={handleExportPdf}
