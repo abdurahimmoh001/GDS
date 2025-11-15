@@ -31,6 +31,7 @@ import AuthScreen from './components/AuthScreen';
 import { Chatbot } from './components/Chatbot';
 import { ChatIcon } from './components/icons/ChatIcon';
 import { PlusIcon } from './components/icons/PlusIcon';
+import { HistoryIcon } from './components/icons/HistoryIcon';
 
 
 const MAX_HISTORY_ITEMS = 15;
@@ -56,6 +57,7 @@ const App: React.FC = () => {
   const [theme, setTheme] = useState < 'light' | 'dark' > ('light');
   const [authState, setAuthState] = useState < 'unauthenticated' | 'authenticated' > ('unauthenticated');
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+  const [isHistoryPanelOpen, setIsHistoryPanelOpen] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem(AUTH_TOKEN_KEY);
@@ -96,6 +98,10 @@ const App: React.FC = () => {
 
   const toggleTheme = () => {
     setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
+
+  const toggleHistoryPanel = () => {
+    setIsHistoryPanelOpen(prev => !prev);
   };
 
   const handleGenerateReport = useCallback(async (data: ResearchInputData, files: UploadedFile[]) => {
@@ -211,16 +217,24 @@ const App: React.FC = () => {
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        <aside className="md:col-span-4 lg:col-span-3">
+      <div className="flex flex-col md:flex-row items-start">
+        {/* History Panel Wrapper */}
+        <div className={`
+            w-full flex-shrink-0 
+            md:w-auto 
+            transition-all duration-300 ease-in-out
+            overflow-hidden
+            ${isHistoryPanelOpen ? 'max-h-[2000px] md:basis-1/3 lg:basis-1/4 md:mr-8' : 'max-h-0 md:basis-0 md:mr-0'}
+        `}>
           <HistoryPanel 
             history={history}
             onSelectReport={handleSelectReport}
             onStartNew={handleStartNew}
             activeReportId={activeReport?.id}
           />
-        </aside>
-        <div className="md:col-span-8 lg:col-span-9">
+        </div>
+        {/* Right Panel */}
+        <div className="flex-grow w-full mt-8 md:mt-0">
           {renderRightPanel()}
         </div>
       </div>
@@ -238,8 +252,17 @@ const App: React.FC = () => {
               </div>
               <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Golden Data Stream</h1>
             </div>
-             <div className="flex items-center space-x-4">
+             <div className="flex items-center space-x-2 md:space-x-4">
                <p className="text-slate-500 hidden md:block dark:text-slate-400">Actionable Desk Research</p>
+                {authState === 'authenticated' && (
+                  <button
+                    onClick={toggleHistoryPanel}
+                    className="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900"
+                    aria-label="Toggle history panel"
+                  >
+                    <HistoryIcon className="w-6 h-6" />
+                  </button>
+                )}
                <button
                   onClick={toggleTheme}
                   className="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900"
