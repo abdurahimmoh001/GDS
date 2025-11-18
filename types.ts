@@ -45,11 +45,4 @@ export interface HistoryItem {
   report: ResearchReport;
 }
 
-export interface ChatMessage {
-  role: 'user' | 'model';
-  content: string;
-  sources?: {
-    uri: string;
-    title: string;
-  } [];
-}
+// ChatMessage interface has been removed as the chatbot feature was removed.

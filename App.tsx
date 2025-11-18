@@ -28,8 +28,6 @@ import {
 import HistoryPanel from './components/HistoryPanel';
 import LoadingScreen from './components/LoadingScreen';
 import AuthScreen from './components/AuthScreen';
-import { Chatbot } from './components/Chatbot';
-import { ChatIcon } from './components/icons/ChatIcon';
 import { PlusIcon } from './components/icons/PlusIcon';
 import { HistoryIcon } from './components/icons/HistoryIcon';
 
@@ -56,7 +54,6 @@ const App: React.FC = () => {
   const [error, setError] = useState < string | null > (null);
   const [theme, setTheme] = useState < 'light' | 'dark' > ('light');
   const [authState, setAuthState] = useState < 'unauthenticated' | 'authenticated' > ('unauthenticated');
-  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isHistoryPanelOpen, setIsHistoryPanelOpen] = useState(true);
 
   useEffect(() => {
@@ -160,7 +157,6 @@ const App: React.FC = () => {
     setAuthState('unauthenticated');
     setActiveReport(null);
     setError(null);
-    setIsChatbotOpen(false);
   };
   
   const renderRightPanel = () => {
@@ -290,18 +286,7 @@ const App: React.FC = () => {
           {renderMainContent()}
         </main>
 
-        {authState === 'authenticated' && (
-          <>
-            <button
-              onClick={() => setIsChatbotOpen(true)}
-              className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-900 transition-transform hover:scale-110"
-              aria-label="Open GDS Assistant"
-            >
-              <ChatIcon className="w-6 h-6" />
-            </button>
-            {isChatbotOpen && <Chatbot onClose={() => setIsChatbotOpen(false)} />}
-          </>
-        )}
+        {/* Chatbot feature has been removed as it was powered by Gemini API */}
       </div>
   );
 };
