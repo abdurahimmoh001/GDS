@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { LogoIcon } from './icons/LogoIcon';
 
@@ -68,12 +69,12 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onSignIn, onSignUp }) => {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-[calc(100vh-200px)]">
-      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg border border-slate-200 dark:bg-slate-800 dark:border-slate-700">
+      <div className="w-full max-w-md bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200 dark:bg-slate-800 dark:border-slate-700">
         <div className="text-center mb-8">
             <div className="bg-blue-600 p-3 rounded-lg inline-block">
                 <LogoIcon className="w-8 h-8 text-white" />
             </div>
-            <h2 className="mt-4 text-2xl font-bold text-slate-900 dark:text-slate-100">
+            <h2 className="mt-4 text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100">
                 {isSignUp ? "The simple path to smarter research starts here." : "Good to see you again."}
             </h2>
             <p className="mt-2 text-slate-500 dark:text-slate-400">

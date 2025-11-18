@@ -100,6 +100,8 @@ const App: React.FC = () => {
   const toggleHistoryPanel = () => {
     setIsHistoryPanelOpen(prev => !prev);
   };
+    
+  const closeHistoryPanel = () => setIsHistoryPanelOpen(false);
 
   const handleGenerateReport = useCallback(async (data: ResearchInputData, files: UploadedFile[]) => {
     setIsSubmitting(true);
@@ -140,12 +142,22 @@ const App: React.FC = () => {
     setActiveReport(item);
     setView('report');
   };
+    
+  const handleSelectReportForMobile = (item: HistoryItem) => {
+    handleSelectReport(item);
+    closeHistoryPanel();
+  };
 
   const handleStartNew = () => {
     setActiveReport(null);
     setError(null);
     setView('form');
   }
+    
+  const handleStartNewForMobile = () => {
+    handleStartNew();
+    closeHistoryPanel();
+  };
 
   const handleAuthAction = () => {
     localStorage.setItem(AUTH_TOKEN_KEY, 'mock-token');
@@ -213,27 +225,47 @@ const App: React.FC = () => {
     }
 
     return (
-      <div className="flex flex-col md:flex-row items-start">
-        {/* History Panel Wrapper */}
-        <div className={`
-            w-full flex-shrink-0 
-            md:w-auto 
-            transition-all duration-300 ease-in-out
-            overflow-hidden
-            ${isHistoryPanelOpen ? 'max-h-[2000px] md:basis-1/3 lg:basis-1/4 md:mr-8' : 'max-h-0 md:basis-0 md:mr-0'}
-        `}>
-          <HistoryPanel 
-            history={history}
-            onSelectReport={handleSelectReport}
-            onStartNew={handleStartNew}
-            activeReportId={activeReport?.id}
-          />
+        <div className="flex flex-row items-start">
+            {/* Desktop History Panel (static in layout) */}
+            <aside className={`
+                hidden md:block flex-shrink-0 
+                transition-all duration-300 ease-in-out
+                ${isHistoryPanelOpen ? 'basis-1/3 lg:basis-1/4 mr-8' : 'basis-0 mr-0'}
+            `}>
+              <div className={isHistoryPanelOpen ? 'w-full' : 'w-0 overflow-hidden'}>
+                  <HistoryPanel 
+                    history={history}
+                    onSelectReport={handleSelectReport}
+                    onStartNew={handleStartNew}
+                    activeReportId={activeReport?.id}
+                  />
+                </div>
+            </aside>
+            
+             {/* Mobile History Panel (off-canvas overlay) */}
+            {authState === 'authenticated' && (
+                <>
+                    <div className={`
+                        md:hidden fixed inset-y-0 left-0 z-40 w-4/5 max-w-sm transform transition-transform duration-300 ease-in-out bg-white dark:bg-slate-800
+                        ${isHistoryPanelOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
+                    `}>
+                        <HistoryPanel 
+                            history={history}
+                            onSelectReport={handleSelectReportForMobile}
+                            onStartNew={handleStartNewForMobile}
+                            activeReportId={activeReport?.id}
+                            onClose={closeHistoryPanel}
+                        />
+                    </div>
+                    {isHistoryPanelOpen && <div className="md:hidden fixed inset-0 bg-black/60 z-30" onClick={closeHistoryPanel}></div>}
+                </>
+            )}
+
+            {/* Main Content */}
+            <div className="flex-grow w-full min-w-0">
+              {renderRightPanel()}
+            </div>
         </div>
-        {/* Right Panel */}
-        <div className="flex-grow w-full mt-8 md:mt-0">
-          {renderRightPanel()}
-        </div>
-      </div>
     );
   };
 
@@ -246,7 +278,7 @@ const App: React.FC = () => {
               <div className="bg-blue-600 p-2 rounded-lg">
                 <LogoIcon className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Golden Data Stream</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100">Golden Data Stream</h1>
             </div>
              <div className="flex items-center space-x-2 md:space-x-4">
                <p className="text-slate-500 hidden md:block dark:text-slate-400">Actionable Desk Research</p>

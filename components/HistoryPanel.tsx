@@ -2,15 +2,17 @@ import React from 'react';
 import type { HistoryItem } from '../types';
 import { HistoryIcon } from './icons/HistoryIcon';
 import { PlusIcon } from './icons/PlusIcon';
+import { XIcon } from './icons/XIcon';
 
 interface HistoryPanelProps {
     history: HistoryItem[];
     onSelectReport: (item: HistoryItem) => void;
     onStartNew: () => void;
     activeReportId?: string | null;
+    onClose?: () => void;
 }
 
-const HistoryPanel: React.FC<HistoryPanelProps> = ({ history, onSelectReport, onStartNew, activeReportId }) => {
+const HistoryPanel: React.FC<HistoryPanelProps> = ({ history, onSelectReport, onStartNew, activeReportId, onClose }) => {
     
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -20,8 +22,12 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ history, onSelectReport, on
         });
     }
 
+    const wrapperClasses = onClose 
+      ? 'h-full flex flex-col p-6' // Mobile panel styles
+      : 'bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200 h-full dark:bg-slate-800 dark:border-slate-700 flex flex-col'; // Desktop card styles
+
     return (
-        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200 h-full dark:bg-slate-800 dark:border-slate-700 flex flex-col">
+        <div className={wrapperClasses}>
             <div className="flex justify-between items-center mb-6 pb-6 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
                 <div className="flex items-center space-x-3">
                     <div className="text-blue-600 bg-blue-100 dark:bg-blue-900/20 p-2 rounded-lg">
@@ -31,13 +37,24 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ history, onSelectReport, on
                         <h2 className="text-lg font-bold text-slate-900 dark:text-slate-200">Research History</h2>
                     </div>
                 </div>
-                <button
-                  onClick={onStartNew}
-                  className="flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-800 transition-colors"
-                >
-                  <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
-                  New
-                </button>
+                <div className="flex items-center">
+                    <button
+                      onClick={onStartNew}
+                      className="flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-800 transition-colors"
+                    >
+                      <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
+                      New
+                    </button>
+                    {onClose && (
+                        <button 
+                            onClick={onClose} 
+                            className="ml-2 p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 focus:outline-none"
+                            aria-label="Close history panel"
+                        >
+                            <XIcon className="w-6 h-6" />
+                        </button>
+                    )}
+                </div>
             </div>
 
             <div className="flex-grow overflow-y-auto -mr-4 pr-3">

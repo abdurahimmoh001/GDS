@@ -97,12 +97,12 @@ const ReportPanel: React.FC < ReportPanelProps > = ({
 
   return (
         <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200 dark:bg-slate-800 dark:border-slate-700">
-          <div className="flex justify-between items-center mb-6 -mt-2">
-             <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Research Report</h2>
-             <div className="flex items-center space-x-2">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 -mt-2">
+             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100">Research Report</h2>
+             <div className="flex items-center space-x-2 w-full sm:w-auto">
                 <button
                   onClick={onStartNew}
-                  className="flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-blue-600/20 dark:text-blue-300 dark:hover:bg-blue-600/30 dark:focus:ring-offset-slate-800 transition-colors"
+                  className="flex-grow sm:flex-grow-0 flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-blue-600/20 dark:text-blue-300 dark:hover:bg-blue-600/30 dark:focus:ring-offset-slate-800 transition-colors"
                 >
                   <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
                   New Research
@@ -110,7 +110,7 @@ const ReportPanel: React.FC < ReportPanelProps > = ({
                  <button
                     onClick={handleExportPdf}
                     disabled={isExporting}
-                    className="flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-slate-700 bg-slate-200 hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:text-slate-400 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600 dark:disabled:bg-slate-600 dark:disabled:text-slate-500 dark:focus:ring-offset-slate-800 transition-colors"
+                    className="flex-grow sm:flex-grow-0 flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-slate-700 bg-slate-200 hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-slate-200 disabled:text-slate-400 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600 dark:disabled:bg-slate-600 dark:disabled:text-slate-500 dark:focus:ring-offset-slate-800 transition-colors"
                   >
                     {isExporting ? (
                       <>
@@ -127,10 +127,10 @@ const ReportPanel: React.FC < ReportPanelProps > = ({
             </div>
           </div>
           <div ref={reportContentRef}>
-             <div id="pdf-content" className="p-10 bg-white dark:bg-slate-900">
+             <div id="pdf-content" className="p-4 sm:p-6 md:p-10 bg-white dark:bg-slate-900">
                 <div className="text-center mb-10 border-b border-slate-200 dark:border-slate-700 pb-8">
-                  <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100">Market Research Report</h1>
-                  <p className="text-xl text-slate-500 dark:text-slate-400 mt-2">Prepared for {startupName}</p>
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-slate-100">Market Research Report</h1>
+                  <p className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 mt-2">Prepared for {startupName}</p>
                 </div>
                 <div className="divide-y divide-slate-200 dark:divide-slate-700">
                   <ReportSection title="Executive Summary">
