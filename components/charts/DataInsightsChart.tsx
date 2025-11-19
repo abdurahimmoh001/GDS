@@ -11,6 +11,7 @@ import {
 import type {
     Insight
 } from '../../types';
+import { CustomTooltip } from './CustomTooltip';
 
 interface DataInsightsChartProps {
     data: Insight[];
@@ -57,29 +58,42 @@ export const DataInsightsChart: React.FC < DataInsightsChartProps > = ({
         left: 10,
         bottom: 5
     }}>
-          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
           <XAxis dataKey="metric" tick={{
-        fill: tickColor,
-        fontSize: 12
-    }} />
-          <YAxis tickFormatter={formatYAxisTick} tick={{
-        fill: tickColor,
-        fontSize: 12
-    }} />
-          <Tooltip
-            cursor={{
-        fill: theme === 'dark' ? 'rgba(100, 116, 139, 0.2)' : 'rgba(203, 213, 225, 0.4)'
-    }}
-            contentStyle={{
-        backgroundColor: theme === 'dark' ? '#1e293b' : '#ffffff', // slate-800 : white
-        borderColor: theme === 'dark' ? '#334155' : '#e2e8f0', // slate-700 : slate-200
-    }}
-            labelStyle={{
-        color: theme === 'dark' ? '#f1f5f9' : '#0f172a'
-    }} // slate-100 : slate-900
-            formatter={(value, name, props) => [props.payload.value, 'Value']}
+            fill: tickColor,
+            fontSize: 12,
+            fontFamily: 'Inter, sans-serif'
+            }} 
+            axisLine={false}
+            tickLine={false}
+            dy={10}
           />
-          <Bar dataKey="numericalValue" fill="#3b82f6" />
+          <YAxis tickFormatter={formatYAxisTick} tick={{
+            fill: tickColor,
+            fontSize: 12,
+            fontFamily: 'Inter, sans-serif'
+            }} 
+            axisLine={false}
+            tickLine={false}
+          />
+          <Tooltip
+            content={<CustomTooltip />}
+            cursor={{
+              fill: theme === 'dark' ? 'rgba(251, 191, 36, 0.05)' : 'rgba(251, 191, 36, 0.1)'
+            }}
+          />
+          <Bar 
+            dataKey="numericalValue" 
+            fill="url(#barGradient)" 
+            radius={[4, 4, 0, 0]}
+            barSize={40}
+          />
+          <defs>
+            <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#fbbf24" stopOpacity={1}/>
+              <stop offset="100%" stopColor="#d97706" stopOpacity={1}/>
+            </linearGradient>
+          </defs>
         </BarChart>
       </ResponsiveContainer>
     </div>

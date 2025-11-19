@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,7 +7,7 @@
     <title>Golden Data Stream</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -14,8 +15,24 @@
         theme: {
           extend: {
             fontFamily: {
-              sans: ['Poppins', 'sans-serif'],
+              sans: ['Inter', 'sans-serif'],
+              heading: ['Poppins', 'sans-serif'],
             },
+            colors: {
+              gold: {
+                50: '#fffbeb',
+                100: '#fef3c7',
+                200: '#fde68a',
+                300: '#fcd34d',
+                400: '#fbbf24',
+                500: '#f59e0b',
+                600: '#d97706',
+                700: '#b45309',
+                800: '#92400e',
+                900: '#78350f',
+                950: '#451a03',
+              }
+            }
           },
         },
       }
@@ -78,14 +95,14 @@
     100% { background-position: 0% 50%; }
   }
   .animated-background {
-    background-image: radial-gradient(circle at 20% 20%, hsla(217, 91%, 60%, 0.1), transparent 40%),
-                      radial-gradient(circle at 80% 70%, hsla(190, 81%, 55%, 0.1), transparent 40%);
+    background-image: radial-gradient(circle at 20% 20%, hsla(37, 91%, 60%, 0.1), transparent 40%),
+                      radial-gradient(circle at 80% 70%, hsla(45, 81%, 55%, 0.1), transparent 40%);
     background-size: 200% 200%;
     animation: background-pan 15s ease-in-out infinite;
   }
   .dark .animated-background {
-    background-image: radial-gradient(circle at 20% 20%, hsla(217, 91%, 60%, 0.15), transparent 40%),
-                      radial-gradient(circle at 80% 70%, hsla(190, 81%, 55%, 0.15), transparent 40%);
+    background-image: radial-gradient(circle at 20% 20%, hsla(37, 91%, 60%, 0.08), transparent 40%),
+                      radial-gradient(circle at 80% 70%, hsla(45, 81%, 55%, 0.08), transparent 40%);
   }
 
   .chat-messages::-webkit-scrollbar {
@@ -115,9 +132,46 @@
   .animate-slide-in-up {
     animation: slide-in-up 0.3s ease-out forwards;
   }
+  
+  @keyframes progress-stripes {
+    from { background-position: 20px 0; }
+    to { background-position: 0 0; }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+  
+  /* Custom Scrollbar for the page */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent; 
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d1d5db; 
+    border-radius: 5px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af; 
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    background: #4b5563; 
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280; 
+  }
 </style>
 </head>
-  <body class="bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+  <body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300 font-sans selection:bg-amber-200 selection:text-amber-900">
     <div id="root"></div>
     <script type="text/babel" data-type="module" src="./index.tsx"></script>
   </body>

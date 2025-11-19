@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { HistoryItem } from '../types';
 import { HistoryIcon } from './icons/HistoryIcon';
 import { PlusIcon } from './icons/PlusIcon';
 import { XIcon } from './icons/XIcon';
+import { UserIcon } from './icons/UserIcon';
 
 interface HistoryPanelProps {
     history: HistoryItem[];
@@ -10,45 +11,70 @@ interface HistoryPanelProps {
     onStartNew: () => void;
     activeReportId?: string | null;
     onClose?: () => void;
+    profiles: string[];
+    currentProfile: string;
+    onSwitchProfile: (profile: string) => void;
+    onCreateProfile: (profile: string) => void;
 }
 
-const HistoryPanel: React.FC<HistoryPanelProps> = ({ history, onSelectReport, onStartNew, activeReportId, onClose }) => {
+const HistoryPanel: React.FC<HistoryPanelProps> = ({ 
+    history, 
+    onSelectReport, 
+    onStartNew, 
+    activeReportId, 
+    onClose,
+    profiles,
+    currentProfile,
+    onSwitchProfile,
+    onCreateProfile
+}) => {
+    const [isAddingProfile, setIsAddingProfile] = useState(false);
+    const [newProfileName, setNewProfileName] = useState('');
     
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
-            month: 'long',
+            month: 'short',
             day: 'numeric'
         });
     }
 
+    const handleAddProfile = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (newProfileName.trim()) {
+            onCreateProfile(newProfileName.trim());
+            setNewProfileName('');
+            setIsAddingProfile(false);
+        }
+    };
+
     const wrapperClasses = onClose 
       ? 'h-full flex flex-col p-6' // Mobile panel styles
-      : 'bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200 h-full dark:bg-slate-800 dark:border-slate-700 flex flex-col'; // Desktop card styles
+      : 'bg-white p-6 rounded-3xl shadow-lg shadow-slate-200/50 border border-slate-100 h-full dark:bg-slate-900 dark:border-slate-800 dark:shadow-none flex flex-col transition-all duration-300'; // Desktop card styles
 
     return (
         <div className={wrapperClasses}>
-            <div className="flex justify-between items-center mb-6 pb-6 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
+            <div className="flex justify-between items-center mb-4 flex-shrink-0">
                 <div className="flex items-center space-x-3">
-                    <div className="text-blue-600 bg-blue-100 dark:bg-blue-900/20 p-2 rounded-lg">
-                        <HistoryIcon className="w-6 h-6" />
+                    <div className="text-amber-600 bg-amber-100 dark:bg-amber-900/20 p-2 rounded-lg">
+                        <HistoryIcon className="w-5 h-5" />
                     </div>
                     <div>
-                        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-200">Research History</h2>
+                        <h2 className="text-lg font-bold font-heading text-slate-900 dark:text-slate-200">History</h2>
                     </div>
                 </div>
                 <div className="flex items-center">
                     <button
                       onClick={onStartNew}
-                      className="flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-800 transition-colors"
+                      className="flex items-center justify-center p-2 rounded-lg text-amber-600 bg-amber-50 hover:bg-amber-100 dark:text-amber-400 dark:bg-amber-900/20 dark:hover:bg-amber-900/30 transition-colors"
+                      title="New Research"
                     >
-                      <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
-                      New
+                      <PlusIcon className="w-5 h-5" />
                     </button>
                     {onClose && (
                         <button 
                             onClick={onClose} 
-                            className="ml-2 p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 focus:outline-none"
+                            className="ml-2 p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 focus:outline-none"
                             aria-label="Close history panel"
                         >
                             <XIcon className="w-6 h-6" />
@@ -57,41 +83,97 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ history, onSelectReport, on
                 </div>
             </div>
 
-            <div className="flex-grow overflow-y-auto -mr-4 pr-3">
+            {/* Profile Selector */}
+            <div className="mb-6 pb-6 border-b border-slate-100 dark:border-slate-800 flex-shrink-0">
+                <div className="flex items-center mb-2 space-x-2">
+                    <UserIcon className="w-4 h-4 text-slate-400" />
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Profile</span>
+                </div>
+                
+                {!isAddingProfile ? (
+                    <div className="flex items-center space-x-2">
+                        <select 
+                            value={currentProfile}
+                            onChange={(e) => onSwitchProfile(e.target.value)}
+                            className="flex-grow appearance-none block w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"
+                        >
+                            {profiles.map(profile => (
+                                <option key={profile} value={profile}>{profile}</option>
+                            ))}
+                        </select>
+                        <button 
+                            onClick={() => setIsAddingProfile(true)}
+                            className="flex-shrink-0 p-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors"
+                            title="Create New Profile"
+                        >
+                            <PlusIcon className="w-4 h-4" />
+                        </button>
+                    </div>
+                ) : (
+                    <form onSubmit={handleAddProfile} className="flex items-center space-x-2">
+                        <input
+                            type="text"
+                            value={newProfileName}
+                            onChange={(e) => setNewProfileName(e.target.value)}
+                            placeholder="Profile Name"
+                            autoFocus
+                            className="flex-grow px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+                        />
+                        <button 
+                            type="submit"
+                            disabled={!newProfileName.trim()}
+                            className="p-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50 transition-colors"
+                        >
+                            <PlusIcon className="w-4 h-4" />
+                        </button>
+                        <button 
+                            type="button"
+                            onClick={() => setIsAddingProfile(false)}
+                            className="p-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 transition-colors"
+                        >
+                            <XIcon className="w-4 h-4" />
+                        </button>
+                    </form>
+                )}
+            </div>
+
+            <div className="flex-grow overflow-y-auto -mr-2 pr-2 custom-scrollbar">
                 {history.length > 0 ? (
-                    <ul role="list" className="divide-y divide-slate-200 dark:divide-slate-700">
+                    <ul role="list" className="space-y-2">
                         {history.map((item) => {
                             const isActive = item.id === activeReportId;
                             return (
-                                <li key={item.id} className={`relative flex items-center space-x-4 py-4 rounded-lg transition-colors duration-200 ${isActive ? 'bg-blue-50 dark:bg-slate-700/50 -mx-4 px-4' : ''}`}>
-                                <div className="min-w-0 flex-auto">
-                                        <div className="flex items-center gap-x-3">
-                                            <h3 className={`text-base leading-6 text-slate-900 dark:text-slate-100 ${isActive ? 'font-semibold' : 'font-medium'}`}>
-                                                <button onClick={() => onSelectReport(item)} className="hover:underline focus:outline-none text-left">
-                                                    <span className="absolute inset-x-0 -top-px bottom-0" />
-                                                    {item.startupName}
-                                                </button>
+                                <li key={item.id}>
+                                    <button 
+                                        onClick={() => onSelectReport(item)} 
+                                        className={`w-full text-left relative flex flex-col py-3 px-4 rounded-xl transition-all duration-200 group border 
+                                        ${isActive 
+                                            ? 'bg-amber-50 border-amber-200/50 shadow-sm dark:bg-amber-900/10 dark:border-amber-500/20' 
+                                            : 'bg-transparent border-transparent hover:bg-slate-50 dark:hover:bg-slate-800'}`}
+                                    >
+                                        {isActive && (
+                                            <div className="absolute left-0 top-3 bottom-3 w-1 bg-amber-500 rounded-r-full"></div>
+                                        )}
+                                        <div className={`flex justify-between items-start ${isActive ? 'pl-2' : ''}`}>
+                                            <h3 className={`text-sm font-semibold truncate pr-2 ${isActive ? 'text-slate-900 dark:text-slate-100' : 'text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-slate-200'}`}>
+                                                {item.startupName}
                                             </h3>
                                         </div>
-                                        <div className="mt-1 flex items-center gap-x-2 text-xs leading-5 text-slate-500 dark:text-slate-400">
-                                            <p>
-                                                {formatDate(item.date)}
-                                            </p>
-                                        </div>
-                                </div>
-                                <div className="flex flex-none items-center gap-x-4">
-                                    <svg className="h-5 w-5 flex-none text-slate-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-                                    </svg>
-                                </div>
+                                        <p className={`text-xs mt-1 ${isActive ? 'pl-2 text-amber-700/70 dark:text-amber-500/70' : 'text-slate-400 dark:text-slate-500'}`}>
+                                            {formatDate(item.date)}
+                                        </p>
+                                    </button>
                                 </li>
                             );
                         })}
                     </ul>
                 ) : (
-                    <div className="text-center py-10">
-                        <p className="text-slate-500 dark:text-slate-400">No reports generated yet.</p>
-                        <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">Your history will appear here.</p>
+                    <div className="text-center py-12 flex flex-col items-center">
+                         <div className="w-12 h-12 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-3">
+                            <HistoryIcon className="w-6 h-6 text-slate-300 dark:text-slate-600" />
+                         </div>
+                        <p className="text-slate-500 dark:text-slate-400 font-medium">No reports yet.</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Reports for <span className="font-semibold">"{currentProfile}"</span> will appear here.</p>
                     </div>
                 )}
             </div>

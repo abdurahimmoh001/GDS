@@ -1,7 +1,14 @@
+
 export interface ResearchInputData {
   startupName: string;
   sector: string;
-  objective: string;
+  targetAudience: string;
+  valueProposition: string;
+  // Replaced generic question with structured research pillars
+  marketDynamics: string; 
+  competitiveLandscape: string;
+  consumerBehavior: string;
+  regulatoryRisks: string;
 }
 
 export interface Competitor {
@@ -26,11 +33,17 @@ export interface Insight {
   visualizationType: VisualizationType;
 }
 
+export interface Source {
+    uri: string;
+    title: string;
+}
+
 export interface ResearchReport {
   executiveSummary: string;
   marketAnalysis: MarketAnalysis;
   dataInsights: Insight[];
   strategicPerspectives?: string;
+  sources?: Source[];
 }
 
 export interface UploadedFile {
@@ -43,6 +56,12 @@ export interface HistoryItem {
   startupName: string;
   date: string;
   report: ResearchReport;
+  profile: string;
 }
 
-// ChatMessage interface has been removed as the chatbot feature was removed.
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'gemini';
+  text: string;
+  updatedReport?: ResearchReport; // Used when the AI suggests an edit
+}
